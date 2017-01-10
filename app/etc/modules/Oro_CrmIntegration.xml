@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Oro
+ * @package CrmIntegration
+ * @copyright Copyright 2013 Oro Inc. (http://www.orocrm.com)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Oro_CrmIntegration>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Api/>
+            </depends>
+        </Oro_CrmIntegration>
+    </modules>
+</config>

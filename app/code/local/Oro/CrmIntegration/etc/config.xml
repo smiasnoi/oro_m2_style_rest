@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @category  Oro
+ * @package   Oro_CrmIntegration
+ * @copyright Copyright 2013 Oro Inc. (http://www.orocrm.com)
+ */
+-->
+<config>
+    <modules>
+        <Oro_CrmIntegration>
+            <version>0.1.0</version>
+        </Oro_CrmIntegration>
+    </modules>
+    <global>
+        <models>
+            <oro_crmintegration>
+                <class>Oro_CrmIntegration_Model</class>
+            </oro_crmintegration>
+        </models>
+        <helpers>
+            <oro_crmintegration>
+                <class>Oro_CrmIntegration_Helper</class>
+            </oro_crmintegration>
+        </helpers>
+    </global>
+</config>

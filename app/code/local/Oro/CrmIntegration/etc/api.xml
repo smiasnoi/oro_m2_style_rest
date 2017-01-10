@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Oro
+ * @package   Oro_CrmIntegration
+ * @copyright Copyright 2013 Oro Inc. (http://www.orocrm.com)
+ */
+-->
+<config>
+    <api>
+        <adapter_aliases>
+            <m2_oro>
+                <suggest_class>Oro_CrmIntegration_Helper_Suggest</suggest_class>
+                <suggest_method>getAdapterCode</suggest_method>
+            </m2_oro>
+        </adapter_aliases>
+        <adapters>
+            <oro_m2>
+                <model>oro_crmintegration/server_adapter</model>
+                <handler>oro_m2</handler>
+                <active>1</active>
+            </oro_m2>
+        </adapters>
+        <handlers>
+            <oro_m2>
+                <model>oro_crmintegration/server_handler</model>
+            </oro_m2>
+        </handlers>
+    </api>
+</config>
