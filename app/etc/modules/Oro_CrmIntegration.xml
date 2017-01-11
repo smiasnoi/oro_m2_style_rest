@@ -14,7 +14,13 @@
             <codePool>local</codePool>
             <depends>
                 <Mage_Api/>
+                <Mage_Api2/>
             </depends>
         </Oro_CrmIntegration>
+        <Mage_Customer>
+            <depends>
+                <Oro_CrmIntegration/>
+            </depends>
+        </Mage_Customer>
     </modules>
 </config>

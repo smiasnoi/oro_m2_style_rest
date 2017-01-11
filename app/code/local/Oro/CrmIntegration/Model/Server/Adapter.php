@@ -2,7 +2,7 @@
 /**
  * @category  Oro
  * @package   Oro_CrmIntegration
- * @copyright Copyright 2013 Oro Inc. (http://www.orocrm.com)
+ * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
  */
 class Oro_CrmIntegration_Model_Server_Adapter
     extends Mage_Api2_Model_Server

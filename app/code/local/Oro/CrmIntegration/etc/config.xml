@@ -3,7 +3,7 @@
 /**
  * @category  Oro
  * @package   Oro_CrmIntegration
- * @copyright Copyright 2013 Oro Inc. (http://www.orocrm.com)
+ * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
  */
 -->
 <config>
@@ -17,6 +17,11 @@
             <oro_crmintegration>
                 <class>Oro_CrmIntegration_Model</class>
             </oro_crmintegration>
+            <customer>
+                <rewrite>
+                    <api2_customer_rest_admin_v1>Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1</api2_customer_rest_admin_v1>
+                </rewrite>
+            </customer>
         </models>
         <helpers>
             <oro_crmintegration>

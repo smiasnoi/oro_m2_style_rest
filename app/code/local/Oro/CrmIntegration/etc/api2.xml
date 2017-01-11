@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Oro
+ * @package   Oro_CrmIntegration
+ * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
+ */
+-->
+<config>
+    <api2>
+        <resources>
+            <customer translate="title" module="api2">
+                <force_attributes>
+                    <admin>
+                        <id>1</id>
+                        <updated_at>1</updated_at>
+                        <addresses>1</addresses>
+                        <store_id>1</store_id>
+                    </admin>
+                </force_attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <entity_id>id</entity_id>
+                    </admin>
+                </m2_attributes_map>
+                <routes>
+                    <route_collection_search>
+                        <route>/customers/search</route>
+                        <action_type>collection</action_type>
+                    </route_collection_search>
+                </routes>
+            </customer>
+            <customer_address_alt>
+                <force_attributes>
+                    <admin>
+                        <id>1</id>
+                        <customer_id>1</customer_id>
+                        <region>1</region>
+                        <region_id>1</region_id>
+                        <country_id>1</country_id>
+                        <street>1</street>
+                        <telephone>1</telephone>
+                        <postcode>1</postcode>
+                        <city>1</city>
+                        <firstname>1</firstname>
+                        <lastname>1</lastname>
+                    </admin>
+                </force_attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <entity_id>id</entity_id>
+                        <parent_id>customer_id</parent_id>
+                    </admin>
+                </m2_attributes_map>
+            </customer_address_alt>
+        </resources>
+    </api2>
+</config>
