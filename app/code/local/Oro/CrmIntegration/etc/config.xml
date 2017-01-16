@@ -28,5 +28,22 @@
                 <class>Oro_CrmIntegration_Helper</class>
             </oro_crmintegration>
         </helpers>
+        <api2>
+            <auth_adapters>
+                <admintoken module="oro_crmintegration" translate="label">
+                    <model>oro_crmintegration/api2_auth_adapter_admintoken</model>
+                    <label>Admin token</label>
+                    <enabled>1</enabled>
+                    <order>10</order>
+                </admintoken>
+            </auth_adapters>
+        </api2>
+        <resources>
+            <oro_crmintegration>
+                <setup>
+                    <module>Oro_CrmIntegration</module>
+                </setup>
+            </oro_crmintegration>
+        </resources>
     </global>
 </config>

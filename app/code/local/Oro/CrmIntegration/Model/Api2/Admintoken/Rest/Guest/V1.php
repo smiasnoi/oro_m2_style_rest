@@ -4,64 +4,53 @@
  * @package   Oro_CrmIntegration
  * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
  */
-class Oro_CrmIntegration_Model_Server_Auth
+class Oro_CrmIntegration_Model_Api2_Admintoken_Rest_Guest_V1 extends Mage_Api2_Model_Resource
 {
     const ORO_CONSUMER_CORE_FLAG = 'oro_rest_consumer';
     const ORO_CONSUMER_NAME = 'ORO CRM REST Consumer';
 
     /**
-     * @param Mage_Api2_Model_Request $request
-     * @return Mage_Api2_Model_Auth_User_Abstract
+     * Dispatch
+     * To implement the functionality, you must create a method in the parent one.
+     *
+     * Action type is defined in api2.xml in the routes section and depends on entity (single object)
+     * or collection (several objects).
+     *
+     * HTTP_MULTI_STATUS is used for several status codes in the response
      */
-    public function authenticate(Mage_Api2_Model_Request $request)
+    public function dispatch()
     {
-        /** @var $helper Mage_Api2_Helper_Data */
-        $helper    = Mage::helper('api2/data');
-        $userTypes = $helper->getUserTypes();
-
-        if (!$userTypes) {
-            throw new Exception('No allowed user types found');
+        switch ($this->getActionType() . $this->getOperation()) {
+            /* Create */
+            case self::ACTION_TYPE_ENTITY . self::OPERATION_CREATE:
+                // Creation of objects is possible only when working with collection
+                $data = $this->_getAdminToken();
+                $this->_render($data);
+                break;
+            default:
+                $this->_critical(self::RESOURCE_METHOD_NOT_IMPLEMENTED);
+                break;
         }
-
-        $userParamsObj = $this->_getUserParams($request);
-        if (!isset($userTypes[$userParamsObj->type])) {
-            throw new Mage_Api2_Exception(
-                'Invalid user type or type is not allowed', Mage_Api2_Model_Server::HTTP_UNAUTHORIZED
-            );
-        }
-        /** @var $userModel Mage_Api2_Model_Auth_User_Abstract */
-        $userModel = Mage::getModel($userTypes[$userParamsObj->type]);
-
-        if (!$userModel instanceof Mage_Api2_Model_Auth_User_Abstract) {
-            throw new Exception('User model must to extend Mage_Api2_Model_Auth_User_Abstract');
-        }
-        // check user type consistency
-        if ($userModel->getType() != $userParamsObj->type) {
-            throw new Exception('User model type does not match appropriate type in config');
-        }
-        $userModel->setUserId($userParamsObj->id);
-
-        return $userModel;
     }
 
     /**
      * @param Mage_Api2_Model_Request $request
      * @return string
      */
-    public function getAdminToken(Mage_Api2_Model_Request $request)
+    public function _getAdminToken()
     {
-        $adminUser = $this->_adminLogin($request);
+        $adminUser = $this->_adminLogin();
         $oauthToken = $this->_buildAdminOauthToken($adminUser);
 
         return (string)$oauthToken->getToken();
     }
 
     /**
-     * @param Mage_Api2_Model_Request $request
      * @return Mage_Admin_Model_User
      */
-    protected function _adminLogin(Mage_Api2_Model_Request $request)
+    protected function _adminLogin()
     {
+        $request = $this->getRequest();
         $bodyParams = $request->getBodyParams();
 
         $username = !empty($bodyParams['username']) ? $bodyParams['username'] : '';
@@ -122,33 +111,5 @@ class Oro_CrmIntegration_Model_Server_Auth
         }
 
         return $oauthConsumer;
-    }
-
-    /**
-     * @param Mage_Api2_Model_Request $request
-     * @return object
-     */
-    protected function _getUserParams(Mage_Api2_Model_Request $request)
-    {
-        $userParamsObj = (object) array('type' => null, 'id' => null);
-
-        $authHeader = $request->getHeader('Authorization');
-        $authHeader = array_filter(explode(' ', $authHeader), 'trim');
-        if (isset($authHeader[0]) && strtolower($authHeader[0]) == 'bearer'
-            && !empty($authHeader[1])) {
-
-            $token = $authHeader[1];
-        } else {
-            return $userParamsObj;
-        }
-
-        $oauthToken = Mage::getModel('oauth/token');
-        $oauthToken->load($token, 'token');
-        if ($oauthToken->getAdminId()) {
-            $userParamsObj->id = $oauthToken->getAdminId();
-            $userParamsObj->type = Mage_Oauth_Model_Token::USER_TYPE_ADMIN;
-        }
-
-        return $userParamsObj;
     }
 }

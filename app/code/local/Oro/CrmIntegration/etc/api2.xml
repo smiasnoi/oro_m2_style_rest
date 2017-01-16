@@ -8,8 +8,14 @@
 -->
 <config>
     <api2>
+        <resource_groups>
+            <oro translate="title" module="oro_crmintegration">
+                <title>Oro Integration</title>
+                <sort_order>1000</sort_order>
+            </oro>
+        </resource_groups>
         <resources>
-            <customer translate="title" module="api2">
+            <customer>
                 <force_attributes>
                     <admin>
                         <id>1</id>
@@ -53,6 +59,146 @@
                     </admin>
                 </m2_attributes_map>
             </customer_address_alt>
+            <oro_admin_token>
+                <group>oro</group>
+                <sort_order>5</sort_order>
+                <model>oro_crmintegration/api2_admintoken</model>
+                <title>Oro Admin Token</title>
+                <privileges>
+                    <guest>
+                        <create>1</create>
+                    </guest>
+                </privileges>
+                <routes>
+                    <route_entity>
+                        <route>/integration/admin/token</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_admin_token>
+            <oro_ping translate="title" module="oro_crmintegration">
+                <group>oro</group>
+                <sort_order>10</sort_order>
+                <model>oro_crmintegration/api2_ping</model>
+                <title>Oro Ping</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="mage_version mage_version admin_url customer_scope">
+                    <version>Oro integration version</version>
+                    <mage_version>Magento version</mage_version>
+                    <admin_url>Admin URL</admin_url>
+                    <customer_scope>Customer scope</customer_scope>
+                </attributes>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/oro/ping</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_ping>
+            <oro_websites translate="title" module="oro_crmintegration">
+                <group>oro</group>
+                <sort_order>20</sort_order>
+                <model>oro_crmintegration/api2_websites</model>
+                <title>Oro Websites</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="website_id code name sort_order default_group_id is_default">
+                    <website_id>Website ID</website_id>
+                    <code>Website Code(Machine name)</code>
+                    <name>Website Name</name>
+                    <sort_order>Website Sort Order</sort_order>
+                    <default_group_id>Website Default Group ID</default_group_id>
+                    <is_default>Is Website Default</is_default>
+                </attributes>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/oro/websites</route>
+                        <action_type>collection</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_websites>
+            <oro_stores>
+                <group>oro</group>
+                <sort_order>30</sort_order>
+                <model>oro_crmintegration/api2_stores</model>
+                <title>Oro Stores</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="id code website_id name store_group_id">
+                    <id>Store ID</id>
+                    <code>Store Code(Machine name)</code>
+                    <name>Store Name</name>
+                    <website_id>Website ID a Store Belongs to</website_id>
+                    <store_group_id>Is Website Default</store_group_id>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <store_id>id</store_id>
+                        <group_id>store_group_id</group_id>
+                    </admin>
+                </m2_attributes_map>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/store/storeViews</route>
+                        <action_type>collection</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_stores>
+            <oro_customer_group>
+                <group>oro</group>
+                <sort_order>20</sort_order>
+                <model>oro_crmintegration/api2_customer_group</model>
+                <title>Oro Stores</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="">
+                    <items>Store ID</items>
+                    <search_criteria>Requested Search Criteria Filters</search_criteria>
+                    <total_count>Store Name</total_count>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <store_id>id</store_id>
+                        <group_id>store_group_id</group_id>
+                    </admin>
+                </m2_attributes_map>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/customerGroups/search</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_customer_group>
         </resources>
     </api2>
 </config>

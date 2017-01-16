@@ -28,8 +28,6 @@ class Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1 extends Mage_Customer
         return $data;
     }
 
-
-
     /**
      * @return false|Mage_Core_Model_Abstract
      */

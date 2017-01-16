@@ -6,8 +6,6 @@
  */
 class Oro_CrmIntegration_Model_Server_Router extends Mage_Api2_Model_Router
 {
-    const ADMIN_TOKEN_URI_REGEXP = '/integration\/admin\/token\/*$/';
-
     /**
      * Set API type to request as a result of one pass route
      *
@@ -33,23 +31,5 @@ class Oro_CrmIntegration_Model_Server_Router extends Mage_Api2_Model_Router
         $request->setParam('api_type', $apiTypeMatch['api_type']);
 
         return $this;
-    }
-
-    /**
-     * @param $request
-     * @param bool $partial
-     * @return mixed
-     */
-    public function route($request)
-    {
-        if ($request->isPost()) {
-            $uri = $request->getRequestUri();
-            if (preg_match(self::ADMIN_TOKEN_URI_REGEXP, $uri)) {
-                $request->setParam('admin_token_request', true);
-                return $request;
-            }
-        }
-
-        return parent::route($request);
     }
 }
