@@ -55,6 +55,15 @@ class Oro_CrmIntegration_Model_Server_Adapter
     }
 
     /**
+     *
+     */
+    public function run()
+    {
+        parent::run();
+        exit;
+    }
+
+    /**
      * Dispatch webservice fault
      *
      * @param int $code

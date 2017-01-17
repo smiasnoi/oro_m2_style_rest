@@ -36,7 +36,8 @@
                     </route_collection_search>
                 </routes>
             </customer>
-            <customer_address_alt>
+
+            <customer_address_alt translate="title" module="oro_crmintegration">
                 <force_attributes>
                     <admin>
                         <id>1</id>
@@ -59,7 +60,8 @@
                     </admin>
                 </m2_attributes_map>
             </customer_address_alt>
-            <oro_admin_token>
+
+            <oro_admin_token translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>5</sort_order>
                 <model>oro_crmintegration/api2_admintoken</model>
@@ -77,6 +79,7 @@
                 </routes>
                 <versions>1</versions>
             </oro_admin_token>
+
             <oro_ping translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>10</sort_order>
@@ -104,6 +107,7 @@
                 </routes>
                 <versions>1</versions>
             </oro_ping>
+
             <oro_websites translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>20</sort_order>
@@ -133,7 +137,8 @@
                 </routes>
                 <versions>1</versions>
             </oro_websites>
-            <oro_stores>
+
+            <oro_stores translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>30</sort_order>
                 <model>oro_crmintegration/api2_stores</model>
@@ -167,11 +172,51 @@
                 </routes>
                 <versions>1</versions>
             </oro_stores>
-            <oro_customer_group>
+
+            <oro_customer_group translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>20</sort_order>
                 <model>oro_crmintegration/api2_customer_group</model>
                 <title>Oro Stores</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <force_attributes>
+                    <admin>
+                        <items>1</items>
+                        <search_criteria>1</search_criteria>
+                        <total_count>1</total_count>
+                    </admin>
+                </force_attributes>
+                <attributes translate="items search_criteria total_count">
+                    <customer_group_id>Customer Group ID</customer_group_id>
+                    <customer_group_code>Customer Group Code</customer_group_code>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <store_id>id</store_id>
+                        <group_id>store_group_id</group_id>
+                    </admin>
+                </m2_attributes_map>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/customerGroups/search</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_customer_group>
+
+            <oro_quote_list translate="title" module="oro_crmintegration">
+                <group>oro</group>
+                <sort_order>20</sort_order>
+                <model>oro_crmintegration/api2_quote_list</model>
+                <title>Oro Quote List</title>
                 <privileges>
                     <admin>
                         <retrieve>1</retrieve>
@@ -193,12 +238,12 @@
                 </exclude_attributes>
                 <routes>
                     <route_entity>
-                        <route>/customerGroups/search</route>
-                        <action_type>entity</action_type>
+                        <route>/oro/quoteList</route>
+                        <action_type>collection</action_type>
                     </route_entity>
                 </routes>
                 <versions>1</versions>
-            </oro_customer_group>
+            </oro_quote_list>
         </resources>
     </api2>
 </config>

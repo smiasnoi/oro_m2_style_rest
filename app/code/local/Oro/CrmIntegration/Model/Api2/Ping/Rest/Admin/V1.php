@@ -4,7 +4,7 @@
  * @package   Oro_CrmIntegration
  * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
  */
-class Oro_CrmIntegration_Model_Api2_Ping_Rest_Admin_V1 extends Mage_Api2_Model_Resource
+class Oro_CrmIntegration_Model_Api2_Ping_Rest_Admin_V1 extends Oro_CrmIntegration_Model_Api2_Resource
 {
     /**
      * Retrieve information about customer

@@ -4,7 +4,7 @@
  * @package   Oro_CrmIntegration
  * @copyright Copyright 2016 Oro Inc. (http://www.orocrm.com)
  */
-class Oro_CrmIntegration_Model_Api2_Admintoken_Rest_Guest_V1 extends Mage_Api2_Model_Resource
+class Oro_CrmIntegration_Model_Api2_Admintoken_Rest_Guest_V1 extends Oro_CrmIntegration_Model_Api2_Resource
 {
     const ORO_CONSUMER_CORE_FLAG = 'oro_rest_consumer';
     const ORO_CONSUMER_NAME = 'ORO CRM REST Consumer';
