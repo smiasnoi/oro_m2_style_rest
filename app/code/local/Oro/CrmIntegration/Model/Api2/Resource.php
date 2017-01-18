@@ -43,7 +43,18 @@ class Oro_CrmIntegration_Model_Api2_Resource extends Mage_Api2_Model_Resource
      * @param Varien_Data_Collection_Db $collection
      * @return Mage_Api2_Model_Resource
      */
-    protected function _applyCollectionModifiersV2(Varien_Data_Collection_Db $collection)
+    final public function applyCollectionModifiersM2(Varien_Data_Collection_Db $collection)
+    {
+        return $this->_applyCollectionModifiersM2($collection);
+    }
+
+    /**
+     * Set navigation parameters and apply filters from URL params
+     *
+     * @param Varien_Data_Collection_Db $collection
+     * @return Mage_Api2_Model_Resource
+     */
+    protected function _applyCollectionModifiersM2(Varien_Data_Collection_Db $collection)
     {
         $pageNumber = $this->getSearchCriteria()->getPageNumber();
         if ($pageNumber != abs($pageNumber)) {
@@ -61,7 +72,7 @@ class Oro_CrmIntegration_Model_Api2_Resource extends Mage_Api2_Model_Resource
 
         $collection->setCurPage($pageNumber)->setPageSize($pageSize);
 
-        /*$sortOrders = $this->getSearchCriteria()->getSortOrders();
+        $sortOrders = $this->getSearchCriteria()->getSortOrders();
         foreach ($sortOrders as $orderField => $orderDirection) {
             $operation = Mage_Api2_Model_Resource::OPERATION_ATTRIBUTE_READ;
             if (!is_string($orderField)
@@ -72,6 +83,58 @@ class Oro_CrmIntegration_Model_Api2_Resource extends Mage_Api2_Model_Resource
             $collection->setOrder($orderField, $orderDirection);
         }
 
-        $this->_applyFilter($collection);*/
+        return $this->_applyFilterM2($collection);
+    }
+
+    /**
+     * Validate filter data and apply it to collection if possible
+     *
+     * @param Varien_Data_Collection_Db $collection
+     * @return Mage_Api2_Model_Resource
+     */
+    protected function _applyFilterM2(Varien_Data_Collection_Db $collection)
+    {
+        $filters = $this->getSearchCriteria()->getMergedFilters();
+
+        if (!$filters) {
+            return $this;
+        }
+
+        if (!is_array($filters)) {
+            $this->_critical(self::RESOURCE_COLLECTION_FILTERING_ERROR);
+        }
+        if (method_exists($collection, 'addAttributeToFilter')) {
+            $methodName = 'addAttributeToFilter';
+        } elseif (method_exists($collection, 'addFieldToFilter')) {
+            $methodName = 'addFieldToFilter';
+        } else {
+            return $this;
+        }
+        $allowedAttributes = $this->getFilter()->getAllowedAttributes(self::OPERATION_ATTRIBUTE_READ);
+
+        $m2AttributesMap = Mage::helper('oro_crmintegration/api2')->getM2AttributesMap($this->getResourceType(), $this->getUserType());
+        $m2AttributesMap = array_flip($m2AttributesMap);
+        foreach ($filters as $filterEntry) {
+            if (!is_array($filterEntry)
+                || !array_key_exists('attribute', $filterEntry)
+                || !in_array($filterEntry['attribute'], $allowedAttributes)
+            ) {
+                $this->_critical(self::RESOURCE_COLLECTION_FILTERING_ERROR);
+            }
+            $attributeCode = $filterEntry['attribute'];
+            if (isset($m2AttributesMap[$attributeCode])) {
+                $attributeCode = $m2AttributesMap[$attributeCode];
+            }
+
+            unset($filterEntry['attribute']);
+
+            try {
+                $collection->$methodName($attributeCode, $filterEntry);
+            } catch(Exception $e) {
+                $this->_critical(self::RESOURCE_COLLECTION_FILTERING_ERROR);
+            }
+        }
+
+        return $this;
     }
 }

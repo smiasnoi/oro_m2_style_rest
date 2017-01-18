@@ -7,6 +7,8 @@
  */
 class Oro_CrmIntegration_Helper_Api2 extends Mage_Core_Helper_Abstract
 {
+    protected $_m2AttributesMap;
+
     /**
      * @param $data
      * @param $resource
@@ -15,11 +17,9 @@ class Oro_CrmIntegration_Helper_Api2 extends Mage_Core_Helper_Abstract
      */
     public function m2RemapData($data, $resource, $userType)
     {
-        $config = Mage::getSingleton('api2/config');
-
         $mappedData = array();
-        $node = $config->getNode('resources/' . $resource . '/m2_attributes_map/' . $userType);
-        $map = $node ? $node->asCanonicalArray() : array();
+
+        $map = $this->getM2AttributesMap($resource, $userType);
         foreach ($data as $key => $value) {
             if (isset($map[$key])) {
                 $dest = $map[$key];
@@ -30,6 +30,25 @@ class Oro_CrmIntegration_Helper_Api2 extends Mage_Core_Helper_Abstract
         }
 
         return $mappedData;
+    }
+
+    /**
+     * @param $resource
+     * @param $userType
+     * @return mixed
+     */
+    public function getM2AttributesMap($resource, $userType)
+    {
+        $key = $resource . $userType;
+        if (!isset($this->_m2AttributesMap[$key])) {
+            $config = Mage::getSingleton('api2/config');
+
+            $mappedData = array();
+            $node = $config->getNode('resources/' . $resource . '/m2_attributes_map/' . $userType);
+            $this->_m2AttributesMap[$key] = $node ? $node->asCanonicalArray() : array();
+        }
+
+        return $this->_m2AttributesMap[$key];
     }
 
     /**

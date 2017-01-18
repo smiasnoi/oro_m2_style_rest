@@ -20,9 +20,11 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
 
     const SORT_ORDERS_KEY = 'sort_orders';
     const DIRECTION_KEY = 'direction';
+    const DEFAULT_SORT_DIRECTION = 'DESC';
 
     protected $_request;
     protected $_filters;
+    protected $_mergedFilters;
 
     /**
      * @return Mage_Api2_Model_Request
@@ -114,6 +116,26 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
                         !empty($filter[self::CONDITION_TYPE_KEY]) ? $filter[self::CONDITION_TYPE_KEY] : self::DEFAULT_CONDITION_TYPE;
                 }
             }
+        } else {
+            $_filters[self::FILTER_GROUPS_KEY] = array();
+        }
+
+        // cleanup fields/attributes order
+        if (isset($_filters[self::SORT_ORDERS_KEY]) && (is_array($_filters[self::SORT_ORDERS_KEY]))) {
+            $sortOrders = &$_filters[self::SORT_ORDERS_KEY];
+            foreach ($sortOrders as $sortIndex => $_sort) {
+                if (empty($_sort[self::FIELD_KEY])) {
+                    unset($sortOrders[$sortIndex]);
+                    continue;
+                }
+
+                $sort = &$sortOrders[$sortIndex];
+                if (empty($sort[DIRECTION_KEY])) {
+                    $sort[DIRECTION_KEY] = self::DEFAULT_SORT_DIRECTION;
+                }
+            }
+        } else {
+            $_filters[self::SORT_ORDERS_KEY] = array();
         }
 
         $this->_filters = $_filters;
@@ -139,22 +161,37 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
     }
 
     /**
-     * @return
+     * @return mixed|null
      */
-    /*public function getSortOrders()
+    public function getSortOrders()
     {
         $filters = $this->getFilters();
-        $sortOrders = array();
+        return isset($filters[self::SORT_ORDERS_KEY]) ? $filters[self::SORT_ORDERS_KEY] : array();
+    }
 
-        if (isset($filters[self::SORT_ORDERS_KEY])) {
-            $sortOrders = $filters[self::SORT_ORDERS_KEY];
-            foreach ($sortOrders as $index => $item) {
-                if (!isset($item[self::FIELD_KEY])) {
-                    $sortOrders
+    /**
+     * Flatterned and processed filter group
+     * @return array()
+     */
+    public function getMergedFilters()
+    {
+        if (!$this->_mergedFilters) {
+            $mergedFilters = array();
+            $filters = $this->getFilters();
+            foreach ($filters[self::FILTER_GROUPS_KEY] as $groups) {
+                foreach ($groups as $group) {
+                    foreach ($group as $filter) {
+                        $mergedFilters[] = array(
+                            'attribute' => $filter[self::FIELD_KEY],
+                            $filter[self::CONDITION_TYPE_KEY] => $filter[self::VALUE_KEY]
+                        );
+                    }
                 }
             }
+
+            $this->_mergedFilters = $mergedFilters;
         }
 
-        $sortOrders = array();
-    }*/
+        return $this->_mergedFilters;
+    }
 }

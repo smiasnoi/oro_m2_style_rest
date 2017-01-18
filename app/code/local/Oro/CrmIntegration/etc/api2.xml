@@ -22,6 +22,10 @@
                         <updated_at>1</updated_at>
                         <addresses>1</addresses>
                         <store_id>1</store_id>
+                        <!-- customer/search  request attributes -->
+                        <items>1</items>
+                        <search_criteria>1</search_criteria>
+                        <total_count>1</total_count>
                     </admin>
                 </force_attributes>
                 <m2_attributes_map>
@@ -29,12 +33,6 @@
                         <entity_id>id</entity_id>
                     </admin>
                 </m2_attributes_map>
-                <routes>
-                    <route_collection_search>
-                        <route>/customers/search</route>
-                        <action_type>collection</action_type>
-                    </route_collection_search>
-                </routes>
             </customer>
 
             <customer_address_alt translate="title" module="oro_crmintegration">
@@ -193,11 +191,13 @@
                 <attributes translate="items search_criteria total_count">
                     <customer_group_id>Customer Group ID</customer_group_id>
                     <customer_group_code>Customer Group Code</customer_group_code>
+                    <id>Customer Group ID M2 Alias</id>
+                    <code>Customer Group ID M2 Alias</code>
                 </attributes>
                 <m2_attributes_map>
                     <admin>
-                        <store_id>id</store_id>
-                        <group_id>store_group_id</group_id>
+                        <customer_group_id>id</customer_group_id>
+                        <customer_group_code>code</customer_group_code>
                     </admin>
                 </m2_attributes_map>
                 <exclude_attributes>
@@ -212,34 +212,37 @@
                 <versions>1</versions>
             </oro_customer_group>
 
+            <!--
+                Notes/TODO:
+                    1. Sub-entitities validattion. See Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1
+                    2. Quote SOAP response message fields can be found in app/code/community/Oro/Api/etc/wsdl.xml
+            -->
             <oro_quote_list translate="title" module="oro_crmintegration">
                 <group>oro</group>
                 <sort_order>20</sort_order>
                 <model>oro_crmintegration/api2_quote_list</model>
-                <title>Oro Quote List</title>
+                <title>Oro Quote</title>
                 <privileges>
                     <admin>
                         <retrieve>1</retrieve>
                     </admin>
                 </privileges>
                 <attributes translate="">
-                    <items>Store ID</items>
-                    <search_criteria>Requested Search Criteria Filters</search_criteria>
-                    <total_count>Store Name</total_count>
                 </attributes>
-                <m2_attributes_map>
+                <force_attributes>
                     <admin>
-                        <store_id>id</store_id>
-                        <group_id>store_group_id</group_id>
+                        <items>1</items>
+                        <search_criteria>1</search_criteria>
+                        <total_count>1</total_count>
                     </admin>
-                </m2_attributes_map>
+                </force_attributes>
                 <exclude_attributes>
                     <admin />
                 </exclude_attributes>
                 <routes>
                     <route_entity>
-                        <route>/oro/quoteList</route>
-                        <action_type>collection</action_type>
+                        <route>/oroQuote/search</route>
+                        <action_type>entity</action_type>
                     </route_entity>
                 </routes>
                 <versions>1</versions>

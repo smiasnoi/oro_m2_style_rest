@@ -18,14 +18,58 @@ class Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1 extends Mage_Customer
     protected function _retrieve()
     {
         $helper = Mage::helper('oro_crmintegration/api2');
-        $data = parent::_retrieve();
-        if ($helper->m2RemappNeeded($this->getRequest())) {
-            $customerId = $this->getRequest()->getParam('id');
-            $data['addresses'] = $this->_getCustomerAddressBook($customerId);
-            $data = $helper->m2RemapData($data, $this->getResourceType(), $this->getUserType());
-        }
+        $customerId = $this->getRequest()->getParam('id');
 
-        return $data;
+        if ($customerId != 'search') {
+            $data = parent::_retrieve();
+            if ($helper->m2RemappNeeded($this->getRequest())) {
+                $data['addresses'] = $this->_getCustomerAddressBook($customerId);
+                $data = $helper->m2RemapData($data, $this->getResourceType(), $this->getUserType());
+            }
+
+            return $data;
+        } else {
+            $collection = $this->_getCollectionForRetrieveM2();
+            $data = $collection->load()->toArray();
+            $items = isset($data['items']) ? $data['items'] : $data;
+
+            foreach ($items as &$item) {
+                $customerId = isset($item['entity_id']) ? $item['entity_id'] : -1;
+                $item['addresses'] = $this->_getCustomerAddressBook($customerId);
+                $item = $this->getFilter()->out($item);
+                $item = $helper->m2RemapData($item, $this->getResourceType(), $this->getUserType());
+            }
+
+            return array(
+                'items' => $items,
+                'search_criteria' => $collection->getFlag('m2_resource')->getSearchCriteria()->getFilters(),
+                'total_count' => $collection->getSize()
+            );
+        }
+    }
+
+    /**
+     * Retrieve collection instances filtered in M2 way
+     *
+     * @return Mage_Customer_Model_Resource_Customer_Collection
+     */
+    protected function _getCollectionForRetrieveM2()
+    {
+        /** @var $collection Mage_Customer_Model_Resource_Customer_Collection */
+        $collection = Mage::getResourceModel('customer/customer_collection');
+        $collection->addAttributeToSelect(array_keys(
+            $this->getAvailableAttributes($this->getUserType(), Mage_Api2_Model_Resource::OPERATION_ATTRIBUTE_READ)
+        ));
+
+        /* @var Oro_CrmIntegration_Model_Api2_Resource */
+        $m2Resource = Mage::getModel('oro_crmintegration/api2_resource');
+        $m2Resource->setUserType($this->getUserType())
+            ->setResourceType($this->getResourceType())
+            ->setRequest($this->getRequest());
+        $m2Resource->applyCollectionModifiersM2($collection);
+
+        $collection->setFlag('m2_resource', $m2Resource);
+        return $collection;
     }
 
     /**
@@ -58,8 +102,13 @@ class Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1 extends Mage_Customer
     {
 
         $_addresses = Mage::getResourceModel('customer/address_collection');
-        $_addresses->addAttributeToFilter('parent_id', $customerId ?: -1)
-            ->addAttributeToSelect('*');
+        if (is_array($customerId)) {
+            array_unshift($customerId, -1);
+            $_addresses->addAttributeToFilter('parent_id', array('in' => $customerId));
+        } else {
+            $_addresses->addAttributeToFilter('parent_id', $customerId ?: -1);
+        }
+        $_addresses->addAttributeToSelect('*');
 
         $addresses = array();
         $index = 0;
