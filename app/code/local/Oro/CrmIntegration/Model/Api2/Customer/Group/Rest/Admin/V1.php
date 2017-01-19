@@ -17,7 +17,9 @@ class Oro_CrmIntegration_Model_Api2_Customer_Group_Rest_Admin_V1 extends Oro_Crm
         $collection = $this->_getCollectionForRetrieve();
         $data = $collection->load()->toArray();
         $items = isset($data['items']) ? $data['items'] : $data;
-        $items = Mage::helper('oro_crmintegration/api2')->m2RemapData($items, $this->getResourceType(), $this->getUserType());
+        foreach ($items as &$item) {
+            $item = Mage::helper('oro_crmintegration/api2')->m2RemapData($item, $this->getResourceType(), $this->getUserType());
+        }
 
         return array(
             'items' => $this->getFilter()->collectionOut($items),

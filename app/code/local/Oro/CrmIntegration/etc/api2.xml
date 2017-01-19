@@ -22,7 +22,7 @@
                         <updated_at>1</updated_at>
                         <addresses>1</addresses>
                         <store_id>1</store_id>
-                        <!-- customer/search  request attributes -->
+                        <!-- customer/search request attributes -->
                         <items>1</items>
                         <search_criteria>1</search_criteria>
                         <total_count>1</total_count>
@@ -173,7 +173,7 @@
 
             <oro_customer_group translate="title" module="oro_crmintegration">
                 <group>oro</group>
-                <sort_order>20</sort_order>
+                <sort_order>40</sort_order>
                 <model>oro_crmintegration/api2_customer_group</model>
                 <title>Oro Stores</title>
                 <privileges>
@@ -212,15 +212,10 @@
                 <versions>1</versions>
             </oro_customer_group>
 
-            <!--
-                Notes/TODO:
-                    1. Sub-entitities validattion. See Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1
-                    2. Quote SOAP response message fields can be found in app/code/community/Oro/Api/etc/wsdl.xml
-            -->
-            <oro_quote_list translate="title" module="oro_crmintegration">
+            <oro_quote translate="title" module="oro_crmintegration">
                 <group>oro</group>
-                <sort_order>20</sort_order>
-                <model>oro_crmintegration/api2_quote_list</model>
+                <sort_order>50</sort_order>
+                <model>oro_crmintegration/api2_quote</model>
                 <title>Oro Quote</title>
                 <privileges>
                     <admin>
@@ -228,7 +223,96 @@
                     </admin>
                 </privileges>
                 <attributes translate="">
+                    <entity_id/><store_id/><created_at/><updated_at/><converted_at/><is_active/><is_virtual/><is_multi_shipping/>
+                    <items_count/><items_qty/><orig_order_id/><store_to_base_rate/><store_to_quote_rate/><base_currency_code/>
+                    <store_currency_code/><quote_currency_code/><grand_total/><base_grand_total/><checkout_method/><customer_id/>
+                    <customer_tax_class_id/><customer_group_id/><customer_email/><customer_prefix/><customer_firstname/>
+                    <customer_middlename/><customer_lastname/><customer_suffix/><customer_dob/><customer_note/><customer_note_notify/>
+                    <customer_is_guest/><remote_ip/><applied_rule_ids/><reserved_order_id/><password_hash/><coupon_code/>
+                    <global_currency_code/><base_to_global_rate/><base_to_quote_rate/><customer_taxvat/><customer_gender/>
+                    <subtotal/><base_subtotal/><subtotal_with_discount/><base_subtotal_with_discount/><is_changed/>
+                    <trigger_recollect/><ext_shipping_info/><gift_message_id/><is_persistent/><gift_message/><shipping_address/>
+                    <billing_address/><items/><payment/><attributes/>
                 </attributes>
+                <force_attributes>
+                    <admin>
+                        <!-- collection output fields -->
+                        <items>1</items>
+                        <search_criteria>1</search_criteria>
+                        <total_count>1</total_count>
+                    </admin>
+                </force_attributes>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/oroQuotes/:id</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </oro_quote>
+            <oro_quote_address>
+                <attributes>
+                    <address_id/><created_at/><updated_at/><customer_id/><save_in_address_book/><customer_address_id/>
+                    <address_type/><email/><prefix/><firstname/><middlename/><lastname/><suffix/><company/><street/><city/>
+                    <region/><region_id/><postcode/><country_id/><telephone/><fax/><same_as_billing/><free_shipping/>
+                    <shipping_method/><shipping_description/><weight/><fax/>
+                </attributes>
+            </oro_quote_address>
+            <oro_quote_item>
+                <attributes>
+                    <item_id/><created_at/><updated_at/><product_id/><store_id/><parent_item_id/><is_virtual/><sku/><name/>
+                    <description/><applied_rule_ids/><additional_data/><free_shipping/><is_qty_decimal/><no_discount/>
+                    <weight/><qty/><price/><base_price/><custom_price/><discount_percent/><discount_amount/><base_discount_amount/>
+                    <tax_percent/><tax_amount/><base_tax_amount/><row_total/><base_row_total/><row_total_with_discount/>
+                    <row_weight/><product_type/><base_tax_before_discount/><tax_before_discount/><original_custom_price/>
+                    <base_cost/><price_incl_tax/><base_price_incl_tax/><row_total_incl_tax/><base_row_total_incl_tax/>
+                    <gift_message_id/><gift_message/><gift_message_available/><weee_tax_applied/><weee_tax_applied_amount/>
+                    <weee_tax_applied_row_amount/><base_weee_tax_applied_amount/><base_weee_tax_applied_row_amount/>
+                    <weee_tax_disposition/><weee_tax_row_disposition/><base_weee_tax_disposition/><base_weee_tax_row_disposition/>
+                    <tax_class_id/><product_image_url/><product_url/>
+                </attributes>
+            </oro_quote_item>
+            <oro_quote_payment>
+                <attributes>
+                    <payment_id/><created_at/><updated_at/><method/><cc_type/><cc_number_enc/><cc_last4/><cc_cid_enc/>
+                    <cc_owner/><cc_exp_month/><cc_exp_year/><cc_ss_owner/><cc_ss_start_month/><cc_ss_start_year/><cc_ss_issue/>
+                    <po_number/><additional_data/><additional_information/>
+                </attributes>
+            </oro_quote_payment>
+
+            <oro_order translate="title" module="oro_crmintegration">
+                <group>oro</group>
+                <sort_order>60</sort_order>
+                <model>oro_crmintegration/api2_order</model>
+                <title>Oro Order</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="">
+                    <increment_id/><parent_id/><store_id/><created_at/><updated_at/><is_active/><customer_id/><tax_amount/>
+                    <shipping_amount/><discount_amount/><subtotal/><grand_total/><total_paid/><total_refunded/><total_qty_ordered/>
+                    <total_canceled/><total_invoiced/><total_online_refunded/><total_offline_refunded/><base_tax_amount/>
+                    <base_shipping_amount/><base_discount_amount/><base_subtotal/><base_grand_total/><base_total_paid/>
+                    <base_total_refunded/><base_total_qty_ordered/><base_total_canceled/><base_total_invoiced/>
+                    <base_total_online_refunded/><base_total_offline_refunded/><billing_address_id/><billing_firstname/>
+                    <billing_lastname/><shipping_address_id/><shipping_firstname/><shipping_lastname/><billing_name/>
+                    <shipping_name/><store_to_base_rate/><store_to_order_rate/><base_to_global_rate/><base_to_order_rate/>
+                    <weight/><store_name/><remote_ip/><status/><state/><applied_rule_ids/><global_currency_code/>
+                    <base_currency_code/><store_currency_code/><order_currency_code/><shipping_method/><shipping_description/>
+                    <customer_email/><customer_firstname/><customer_lastname/><quote_id/><is_virtual/><customer_group_id/>
+                    <customer_note_notify/><customer_is_guest/><email_sent/><order_id/><gift_message_id/><gift_message/>
+                    <shipping_address/><billing_address/><items/><payment/><status_history/><coupon_code/><attributes/>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <entity_id>order_id</entity_id>
+                    </admin>
+                </m2_attributes_map>
                 <force_attributes>
                     <admin>
                         <items>1</items>
@@ -241,12 +325,96 @@
                 </exclude_attributes>
                 <routes>
                     <route_entity>
-                        <route>/oroQuote/search</route>
+                        <route>/oroOrders/:increment_id</route>
                         <action_type>entity</action_type>
                     </route_entity>
                 </routes>
                 <versions>1</versions>
-            </oro_quote_list>
+            </oro_order>
+            <oro_order_address>
+                <attributes>
+                    <increment_id/><parent_id/><created_at/><updated_at/><is_active/><address_type/><firstname/><lastname/>
+                    <company/><street/><city/><region/><postcode/><country_id/><telephone/><fax/><region_id/><address_id/>
+                </attributes>
+            </oro_order_address>
+            <oro_order_item>
+                <attributes>
+                    <item_id/><order_id/><quote_item_id/><created_at/><updated_at/><product_id/><product_type/><product_options/>
+                    <weight/><is_virtual/><sku/><name/><applied_rule_ids/><free_shipping/><is_qty_decimal/><no_discount/>
+                    <qty_canceled/><qty_invoiced/><qty_ordered/><qty_refunded/><qty_shipped/><cost/><price/><base_price/>
+                    <original_price/><base_original_price/><tax_percent/><tax_amount/><base_tax_amount/><tax_invoiced/>
+                    <base_tax_invoiced/><discount_percent/><discount_amount/><base_discount_amount/><discount_invoiced/>
+                    <base_discount_invoiced/><amount_refunded/><base_amount_refunded/><row_total/><base_row_total/><row_invoiced/>
+                    <base_row_invoiced/><row_weight/><gift_message_id/><gift_message/><gift_message_available/><base_tax_before_discount/>
+                    <tax_before_discount/><weee_tax_applied/><weee_tax_applied_amount/><weee_tax_applied_row_amount/><base_weee_tax_applied_amount/>
+                    <base_weee_tax_applied_row_amount/><weee_tax_disposition/><weee_tax_row_disposition/><base_weee_tax_disposition/><base_weee_tax_row_disposition/>
+                </attributes>
+            </oro_order_item>
+            <oro_order_payment>
+                <attributes>
+                    <increment_id/><parent_id/><created_at/><updated_at/><is_active/><amount_ordered/><shipping_amount/>
+                    <base_amount_ordered/><base_shipping_amount/><method/><po_number/><cc_type/><cc_number_enc/><cc_last4/>
+                    <cc_owner/><cc_exp_month/><cc_exp_year/><cc_ss_start_month/><cc_ss_start_year/><payment_id/>
+                </attributes>
+            </oro_order_payment>
+            <oro_order_history_item>
+                <attributes>
+                    <increment_id/><parent_id/><created_at/><updated_at/><is_active/><is_customer_notified/><status/><comment/>
+                </attributes>
+            </oro_order_history_item>
+
+            <oro_directory translate="title" module="oro_crmintegration">
+                <group>oro</group>
+                <sort_order>500</sort_order>
+                <model>oro_crmintegration/api2_directory</model>
+                <title>Oro Quote</title>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                </privileges>
+                <attributes translate="two_letter_abbreviation three_letter_abbreviation full_name_locale full_name_english">
+                    <id/>
+                    <two_letter_abbreviation>Two Letters Abbreviation</two_letter_abbreviation>
+                    <three_letter_abbreviation>Two Letters Abbreviation</three_letter_abbreviation>
+                    <full_name_locale>Full Name Locale</full_name_locale>
+                    <full_name_english>Full Name English</full_name_english>
+                    <available_regions/>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <country_id>id</country_id>
+                        <iso2_code>two_letter_abbreviation</iso2_code>
+                        <iso3_code>three_letter_abbreviation</iso3_code>
+                    </admin>
+                </m2_attributes_map>
+                <exclude_attributes>
+                    <admin />
+                </exclude_attributes>
+                <routes>
+                    <route_entity>
+                        <route>/directory/countries/:country_id</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                    <route_collection>
+                        <route>/directory/countries</route>
+                        <action_type>collection</action_type>
+                    </route_collection>
+                </routes>
+                <versions>1</versions>
+            </oro_directory>
+            <oro_directory_region>
+                <attributes translate="code name">
+                    <id/>
+                    <code>Region ISO2 Code</code>
+                    <name>Region Name</name>
+                </attributes>
+                <m2_attributes_map>
+                    <admin>
+                        <region_id>id</region_id>
+                    </admin>
+                </m2_attributes_map>
+            </oro_directory_region>
         </resources>
     </api2>
 </config>

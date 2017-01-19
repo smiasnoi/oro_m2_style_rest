@@ -43,7 +43,6 @@ class Oro_CrmIntegration_Helper_Api2 extends Mage_Core_Helper_Abstract
         if (!isset($this->_m2AttributesMap[$key])) {
             $config = Mage::getSingleton('api2/config');
 
-            $mappedData = array();
             $node = $config->getNode('resources/' . $resource . '/m2_attributes_map/' . $userType);
             $this->_m2AttributesMap[$key] = $node ? $node->asCanonicalArray() : array();
         }

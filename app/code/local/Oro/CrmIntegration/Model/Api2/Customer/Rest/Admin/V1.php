@@ -96,7 +96,8 @@ class Oro_CrmIntegration_Model_Api2_Customer_Rest_Admin_V1 extends Mage_Customer
     }
 
     /**
-     * @param int $customerId
+     * @param $customerId
+     * @return array
      */
     protected function _getCustomerAddressBook($customerId)
     {

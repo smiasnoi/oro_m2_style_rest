@@ -6,6 +6,8 @@
  */
 class Oro_CrmIntegration_Model_Api2_Resource extends Mage_Api2_Model_Resource
 {
+    protected $_ignoredAttributeCodes = array();
+
     protected $searchCriteria;
 
     /**
@@ -131,7 +133,77 @@ class Oro_CrmIntegration_Model_Api2_Resource extends Mage_Api2_Model_Resource
             try {
                 $collection->$methodName($attributeCode, $filterEntry);
             } catch(Exception $e) {
+                Mage::logException($e);
                 $this->_critical(self::RESOURCE_COLLECTION_FILTERING_ERROR);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get entity attributes that are not not present in known attributes list.
+     *
+     * @param Varien_Object $entity
+     * @param array $data
+     * @param array $exclude
+     * @param array $include
+     * @return array
+     */
+    protected function _getNotIncludedAttributes(
+        Varien_Object $entity,
+        array $data,
+        array $exclude = array(),
+        array $include = array()
+    ) {
+        $entityData = $entity->toArray();
+        $knownAttributes = array_diff(array_keys($entityData), $exclude);
+        $attributesToExpose = array_merge($knownAttributes, $include);
+
+        $attributes = array();
+
+        if (!empty($attributesToExpose)) {
+            $attributes = array_intersect_key(
+                array_merge($data, $entityData),
+                array_combine($attributesToExpose, $attributesToExpose)
+            );
+        }
+
+        return $this->_packAssoc($attributes);
+    }
+
+    /**
+     * Pack associative array to format supported by API.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function _packAssoc(array $data)
+    {
+        $result = array();
+        foreach ($data as $key => $value) {
+            $result[] = array(
+                'key' => $key,
+                'value' => $value
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $type
+     * @param array &$attributes
+     * @return $this
+     */
+    protected function _cleanupAdditionalAttributes($type, &$attributes)
+    {
+        if (isset($this->_ignoredAttributeCodes[$type])) {
+            $ignoredAttributes = $this->_ignoredAttributeCodes[$type];
+            foreach ($attributes as $index => $attribute) {
+                if (isset($attribute['key']) && in_array($attribute['key'], $ignoredAttributes)) {
+                    unset($attributes[$index]);
+                }
             }
         }
 

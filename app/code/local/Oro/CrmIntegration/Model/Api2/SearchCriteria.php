@@ -22,6 +22,8 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
     const DIRECTION_KEY = 'direction';
     const DEFAULT_SORT_DIRECTION = 'DESC';
 
+    const COMPEX_FILTER_DELIMITER = ',';
+
     protected $_request;
     protected $_filters;
     protected $_mergedFilters;
@@ -183,7 +185,7 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
                     foreach ($group as $filter) {
                         $mergedFilters[] = array(
                             'attribute' => $filter[self::FIELD_KEY],
-                            $filter[self::CONDITION_TYPE_KEY] => $filter[self::VALUE_KEY]
+                            $filter[self::CONDITION_TYPE_KEY] => $this->_prepareFilterValue($filter)
                         );
                     }
                 }
@@ -193,5 +195,26 @@ class Oro_CrmIntegration_Model_Api2_SearchCriteria
         }
 
         return $this->_mergedFilters;
+    }
+
+    /**
+     * @param $filter
+     * @return array|null
+     */
+    protected function _prepareFilterValue($filter) {
+        $value = isset($filter[self::VALUE_KEY]) ? (string)$filter[self::VALUE_KEY] : null;
+        $conditionType = isset($filter[self::CONDITION_TYPE_KEY]) ? $filter[self::CONDITION_TYPE_KEY] : null;
+
+        if (in_array($conditionType, array('in', 'nin', 'finset'))) {
+            $value = explode(self::COMPEX_FILTER_DELIMITER, (string)$value);
+            foreach ($value as $index => $subvalue) {
+                if (!trim($subvalue)) {
+                    unset($value[$index]);
+                }
+            }
+            $value = $value ?: array(null);
+        }
+
+        return $value;
     }
 }
